@@ -1,3 +1,6 @@
+import java.util.Scanner;
+
+//test commit :(
 interface Rentable {
     double calculateRentalFee(int days);
 }
@@ -20,14 +23,33 @@ class Car implements Rentable {
         this.available = available;
     }
 
-    public int getId() { return id; }
-    public String getBrand() { return brand; }
-    public String getModel() { return model; }
-    public int getYear() { return year; }
-    public double getPricePerDay() { return pricePerDay; }
-    public boolean isAvailable() { return available; }
+    public int getId() {
+        return id;
+    }
 
-    public void setAvailable(boolean available) { this.available = available; }
+    public String getBrand() {
+        return brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public double getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
     @Override
     public double calculateRentalFee(int days) {
@@ -42,7 +64,8 @@ class Car implements Rentable {
 class ElectricCar extends Car {
     private int batteryCapacity;
 
-    ElectricCar(int id, String brand, String model, int year, double pricePerDay, boolean available, int batteryCapacity) {
+    ElectricCar(int id, String brand, String model, int year, double pricePerDay, boolean available,
+            int batteryCapacity) {
         super(id, brand, model, year, pricePerDay, available);
         this.batteryCapacity = batteryCapacity;
     }
@@ -52,6 +75,56 @@ class ElectricCar extends Car {
         return super.calculateRentalFee(days) + (days * 5);
     }
 }
-public class main { 
-    private static Scanner sc = new Scanner(System.in); private static CarInventory inv = new CarInventory();
+
+class GasCar extends Car {
+    int mpg;
+
+    public GasCar(int id, String brand, String model, int year,
+            double pricePerDay, boolean available, int mpg) {
+
+        super(id, brand, model, year, pricePerDay, available);
+        this.mpg = mpg;
+    }
+
+    public int getMpg() {
+        return mpg;
+    }
+}
+
+class Customer {
+    int id;
+    String name;
+
+    public Customer(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+
+class Rental {
+    int rentalId;
+    Car car;
+    Customer customer;
+    int days;
+    double totalFee;
+
+    public Rental(int rentalId, Car car, Customer customer, int days) {
+        this.rentalId = rentalId;
+        this.car = car;
+        this.customer = customer;
+        this.days = days;
+        this.totalFee = car.calculateRentalFee(days);
+    }
+}
+
+public class Main {
+    private static Scanner sc = new Scanner(System.in);
+    private static CarInventory inv = new CarInventory();
+    private static Map<Integer, Customer> customers = new HashMap<>();
+
+    public static void main(String[] args) {
+        inv.loadFromCSV("car_inventory.csv");
+
+    }
+
 }
