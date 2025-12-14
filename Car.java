@@ -1,18 +1,18 @@
-package com.carrental;
 
 public abstract class Car implements Rentable {
-    private String licensePlate;
+    private int id;
     private String brand;
     private String model;
-    private double dailyRate;
+    private int year;
+    private double pricePerDay;
     private boolean isAvailable;
     
-   
-    public Car(String licensePlate, String brand, String model, double dailyRate) {
-        this.licensePlate = licensePlate;
+    public Car(int id, String brand, String model, int year, double pricePerDay) {
+        this.id = id;
         this.brand = brand;
         this.model = model;
-        this.dailyRate = dailyRate;
+        this.year = year;
+        this.pricePerDay = pricePerDay;
         this.isAvailable = true;
     }
     
@@ -43,14 +43,14 @@ public abstract class Car implements Rentable {
     @Override
     public abstract double calculateRentalFee(int days);
     
-   
-    public String getLicensePlate() { return licensePlate; }
+
+    public int id() { return id; }
     public String getBrand() { return brand; }
     public String getModel() { return model; }
-    public double getDailyRate() { return dailyRate; }
+    public double getpricePerDay() { return pricePerDay; }
     
     @Override
     public String toString() {
-        return brand + " " + model + " [" + licensePlate + "]";
+        return brand + " " + model + " [" + id + "]";
     }
 }

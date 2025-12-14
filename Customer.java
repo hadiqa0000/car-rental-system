@@ -1,5 +1,3 @@
-public package com.carrental;
-
 public class Customer {
     private String id;
     private String name;
@@ -20,6 +18,4 @@ public class Customer {
     public String toString() {
         return name + " (" + id + ")";
     }
-} {
-    
 }
