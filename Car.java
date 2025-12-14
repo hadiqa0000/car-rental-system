@@ -48,9 +48,14 @@ public abstract class Car implements Rentable {
     public String getBrand() { return brand; }
     public String getModel() { return model; }
     public double getpricePerDay() { return pricePerDay; }
+    public int getYear() { return year; } 
     
     @Override
     public String toString() {
         return brand + " " + model + " [" + id + "]";
     }
+
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
+}
 }

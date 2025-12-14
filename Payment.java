@@ -1,18 +1,15 @@
 public class Payment {
     private double amount;
-    private  boolean ispaid;
-
-    public Payment(double amount){
+    private boolean isPaid;
+    
+    public Payment(double amount) {
         this.amount = amount;
-        this.ispaid = false;
-
-
+        this.isPaid = false;
     }
-
-    public void setPaid(boolean paid){
-        this.ispaid = true;
-
-
+    
+    
+    public void setPaid(boolean paid) {
+        this.isPaid = paid;
     }
 
     public double getAmount() {
@@ -22,5 +19,10 @@ public class Payment {
     public boolean isPaid() {
         return isPaid;
     }
-}
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    
+    
 }

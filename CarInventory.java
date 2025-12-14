@@ -6,7 +6,7 @@ public class CarInventory {
 
     public void loadFromCSV(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // skip header
+            br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -21,13 +21,13 @@ public class CarInventory {
                 Car car;
                 if (fuelType.equalsIgnoreCase("Gas")) {
                     car = new GasCar(id, brand, model, year, pricePerDay, fuelType);
-                } else { // Electric
+                } else { 
                     double electricCapacity = Double.parseDouble(parts[7]);
                     car = new ElectricCar(id, brand, model, year, pricePerDay, electricCapacity);
                 }
 
                 if (!available) {
-                    car.returnVehicle(); // mark unavailable if CSV says false
+                    car.returnVehicle();
                 }
 
                 cars.add(car);
@@ -44,6 +44,20 @@ public class CarInventory {
         }
         return availableCars;
     }
+
+    public List<Car> searchCars(Integer year, String model, Double minPrice, Double maxPrice) {
+        List<Car> results = new ArrayList<>();
+        for (Car car : cars) {
+            if (!car.isAvailable()) continue;
+            if (year != null && car.getYear() != year) continue;
+            if (model != null && !car.getModel().equalsIgnoreCase(model)) continue;
+            if (minPrice != null && car.getpricePerDay() < minPrice) continue;
+            if (maxPrice != null && car.getpricePerDay() > maxPrice) continue;
+            results.add(car);
+        }
+        return results;
+    }
 }
+
 
 
