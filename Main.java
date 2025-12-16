@@ -27,17 +27,6 @@ public class Main {
     
 
 
-
-
-
-
-
-
-
-
-
-
-
     private static void showMainMenu() {
         while (true) {
             System.out.println("\n=== Car Rental System ===");
@@ -231,7 +220,7 @@ public class Main {
         return true;
     }
     
-    private static boolean isValidEmail(String email) {
+    private static boolean isValidEmail (String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
