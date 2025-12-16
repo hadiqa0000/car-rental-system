@@ -1,4 +1,4 @@
-id,brand,model,year,pricePerDay,available,fuelType,electricCapacity
+tpid,brand,model,year,pricePerDay,available,fuelType,electricCapacity
 1,Kia,Coupe,2006,77.79,False,Gas,
 2,Nissan,Hatchback,2023,53.19,True,Electric,99.8
 3,Chevrolet,SUV,2008,108.15,False,Electric,110.9

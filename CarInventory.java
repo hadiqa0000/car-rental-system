@@ -21,7 +21,7 @@ public class CarInventory {
                 Car car;
                 if (fuelType.equalsIgnoreCase("Gas")) {
                     car = new GasCar(id, brand, model, year, pricePerDay, fuelType);
-                } else { 
+                } else {
                     double electricCapacity = Double.parseDouble(parts[7]);
                     car = new ElectricCar(id, brand, model, year, pricePerDay, electricCapacity);
                 }

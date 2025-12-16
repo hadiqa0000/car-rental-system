@@ -30,7 +30,7 @@ public abstract class Car implements Rentable {
     @Override
     public boolean returnVehicle() {
         isAvailable = true;
-        System.out.println(brand + " " + model + " returned");
+        
         return true;
     }
     
