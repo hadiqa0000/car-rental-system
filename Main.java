@@ -25,6 +25,19 @@ public class Main {
         scanner.close();
     }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static void showMainMenu() {
         while (true) {
             System.out.println("\n=== Car Rental System ===");
@@ -46,7 +59,7 @@ public class Main {
                         register();
                         break;
                     case 3:
-                        browseCarsByBrand();  // Available without login
+                        browseCarsByBrand();  
                         break;
                     case 4:
                         System.out.println("Thank you for using our system!");
@@ -60,9 +73,8 @@ public class Main {
         }
     }
     
-    // ============================================
-    // PUBLIC BROWSE SECTION (No login required)
-    // ============================================
+    
+    
     
     private static void browseCarsByBrand() {
         List<Car> availableCars = inventory.getAvailableCars();
@@ -72,7 +84,8 @@ public class Main {
             return;
         }
         
-        // Collect unique brands from available cars
+
+
         Set<String> brands = new TreeSet<>();
         Map<String, List<Car>> carsByBrand = new HashMap<>();
         
@@ -82,7 +95,7 @@ public class Main {
             carsByBrand.computeIfAbsent(brand, k -> new ArrayList<>()).add(car);
         }
         
-        // Display brand menu
+        
         System.out.println("\n=== Available Brands ===");
         String[] brandArray = brands.toArray(new String[0]);
         
@@ -99,7 +112,7 @@ public class Main {
             int brandChoice = Integer.parseInt(scanner.nextLine());
             
             if (brandChoice == 0) {
-                return; // Back to main menu
+                return; 
             }
             
             if (brandChoice > 0 && brandChoice <= brandArray.length) {
@@ -138,7 +151,7 @@ public class Main {
         System.out.println("=".repeat(80));
         
         if (showRentOptions && currentCustomer != null) {
-            // Only show rent options if logged in AND showRentOptions is true
+        
             System.out.println("\nOptions:");
             System.out.println("1. Rent a car");
             System.out.println("2. Back to brands");
@@ -156,7 +169,7 @@ public class Main {
                         browseCarsByBrand();
                         break;
                     case 3:
-                        // Just return to caller
+        
                         break;
                     default:
                         System.out.println("Invalid choice!");
@@ -165,7 +178,7 @@ public class Main {
                 System.out.println("Please enter a number!");
             }
         } else {
-            // Not logged in or not showing rent options
+            
             if (!showRentOptions) {
                 System.out.println("\n[Login to rent a car]");
             }
@@ -174,19 +187,121 @@ public class Main {
         }
     }
     
-    // ============================================
-    // LOGIN/REGISTER SECTION
-    // ============================================
+
+    private static boolean checkfullname(String name) {
+
+        if (name == null) return false;
+        
+
+        name = name.trim();
+        if (name.isEmpty()) return false;
+        
+        int firstSpace = -1;
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) == ' ') {
+                firstSpace = i;
+                break;
+            }
+        }
+        
+        if (firstSpace == -1) {
+            return false;  
+        }
+        
+
+        String firstName = name.substring(0, firstSpace);
+        
+
+        String lastName = "";
+        int lastCharIndex = name.length() - 1;
+        while (lastCharIndex > firstSpace && name.charAt(lastCharIndex) == ' ') {
+            lastCharIndex--;
+        }
+        
+        if (lastCharIndex > firstSpace) {
+            lastName = name.substring(firstSpace + 1, lastCharIndex + 1);
+        }
+        
+
+        if (firstName.length() < 2 || lastName.length() < 2) {
+            return false;
+        }
+        
+        
+        return true;
+    }
+    
+    private static boolean isValidEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        
+        email = email.trim().toLowerCase();
+        
+        String[] allowedDomains = {
+            "@gmail.com",
+            "@yahoo.com",
+            "@outlook.com",
+            "@hotmail.com"
+        };
+        
+        boolean validDomain = false;
+        for (String domain : allowedDomains) {
+            if (email.endsWith(domain)) {
+                validDomain = true;
+                break;
+            }
+        }
+        
+        if (!validDomain) {
+            System.out.println("Allowed domains: gmail.com, yahoo.com, outlook.com, hotmail.com");
+            return false;
+        }
+        
+        
+        int atIndex = email.indexOf('@');
+        if (atIndex <= 0) {
+            return false;
+        }
+        
+        String localPart = email.substring(0, atIndex);
+        if (localPart.isEmpty()) {
+            return false;
+        }
+        
+        
+        if (!localPart.matches("^[a-zA-Z0-9._%+-]+$")) {
+            System.out.println("Email can only contain letters upper and lowercase, numbers, dots, underscores, plus, and hyphens");
+            return false;
+        }
+        
+        
+        if (localPart.contains("..")) {
+            System.out.println("Email cannot have consecutive dots");
+            return false;
+        }
+        
+        if (localPart.startsWith(".") || localPart.endsWith(".")) {
+            System.out.println("Email cannot start or end with a dot");
+            return false;
+        }
+        
+        return true;
+    }
     
     private static void login() {
         System.out.println("\n=== Login ===");
         System.out.print("Email: ");
-        if()
+
+        
         String email = scanner.nextLine();
+
+       isValidEmail(email);
         System.out.print("Password: ");
         String password = scanner.nextLine();
         
         currentCustomer = loginManager.login(email, password);
+
         if (currentCustomer != null) {
             System.out.println("Login successful! Welcome " + currentCustomer.getName());
             showCustomerMenu();
@@ -199,10 +314,20 @@ public class Main {
         System.out.println("\n=== Registration ===");
         
         System.out.print("Full Name: ");
+        
         String name = scanner.nextLine();
+        if(!checkfullname(name)){
+            System.out.print("full name is mandatory!");
+            return;
+        }
         
         System.out.print("Email: ");
         String email = scanner.nextLine();
+        if(!isValidEmail(email)){
+                System.out.print("cannot register with an invalid email");
+            return;
+
+        }
         
         System.out.print("Password (min 6 characters): ");
         String password = scanner.nextLine();
@@ -356,7 +481,7 @@ public class Main {
         List<Car> results = inventory.searchCars(
             minYear == 0 ? null : minYear,
             model.isEmpty() ? null : model,
-            null,  // minPrice
+            null, 
             maxPrice == 0 ? null : maxPrice
         );
         

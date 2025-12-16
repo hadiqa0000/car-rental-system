@@ -87,5 +87,33 @@ public class LoginManager {
     public Map<String, Customer> getCustomers() {
         return new HashMap<>(customers);
     }
+
+    private static void login() {
+        System.out.println("\n=== Login ===");
+        
+        String email;
+        while (true) {
+            System.out.print("Email: ");
+            email = scanner.nextLine();
+            
+    
+            if (email.contains("@") && email.contains(".")) {
+                break;
+            } else {
+                System.out.println("Please enter a valid email address");
+            }
+        }
+        
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+        
+        currentCustomer = loginManager.login(email, password);
+        if (currentCustomer != null) {
+            System.out.println("Login successful! Welcome " + currentCustomer.getName());
+            showCustomerMenu();
+        } else {
+            System.out.println("Invalid email or password!");
+        }
+    }
 }
 
