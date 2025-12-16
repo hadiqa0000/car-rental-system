@@ -60,7 +60,15 @@ public class Rentalmanager {
         } catch (IOException e) {
             System.err.println("Error loading rentals: " + e.getMessage());
         }
+    
+
+    }
     }
 
+        private long getDaysBetween(LocalDate start, LocalDate end) {
+            return java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
         }
-}
+        
+
+
+
