@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -495,46 +497,68 @@ public class Main {
             rentCar(selectedCar);
         }
     }
-    
+
     private static void rentCar(Car car) {
         System.out.println("\n=== Rent " + car.getBrand() + " " + car.getModel() + " ===");
-
-
-        
-        System.out.print("Start Date (YYYY-MM-DD): ");
-        LocalDate startDate = LocalDate.parse(scanner.nextLine());
-        
-
-        System.out.print("End Date (YYYY-MM-DD): ");
-        LocalDate endDate = LocalDate.parse(scanner.nextLine());
-        
-
-        if (endDate.isBefore(startDate)) {
-            System.out.println("End date must be after start date!");
-            return;
+    
+        LocalDate startDate;
+        LocalDate endDate;
+    
+        while (true) {
+            System.out.print("Start Date (YYYY-MM-DD): ");
+            String input = scanner.nextLine().trim();
+            try {
+                startDate = LocalDate.parse(input);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date. Example: 2026-01-19");
+            }
         }
-        
-        long days = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        double totalFee = car.calculateRentalFee((int)days);
-        
-        System.out.printf("\n=== Rental Summary ===\n");
+    
+        while (true) {
+            System.out.print("End Date (YYYY-MM-DD): ");
+            String input = scanner.nextLine().trim();
+            try {
+                endDate = LocalDate.parse(input);
+                if (endDate.isBefore(startDate)) {
+                    System.out.println("End date must be after start date.");
+                    continue;
+                }
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date. Example: 2026-02-04");
+            }
+        }
+    
+        long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        double totalFee = car.calculateRentalFee((int) days);
+    
+        System.out.println("\n=== Rental Summary ===");
         System.out.println("Car: " + car.getBrand() + " " + car.getModel());
         System.out.println("Rental Period: " + startDate + " to " + endDate + " (" + days + " days)");
         System.out.println("Daily Rate: $" + car.getpricePerDay());
         System.out.println("Total Cost: $" + totalFee);
-        
-        System.out.print("\nConfirm rental (yes/no): ");
-        String confirm = scanner.nextLine();
-        
-        if (confirm.equalsIgnoreCase("yes")) {
-            if (car.rent(currentCustomer, (int)days)) {
-                System.out.println("Car rented successfully!");
-                // yet to do: Save rental to file/database
-            } else {
-                System.out.println("Car is no longer available!");
+    
+        while (true) {
+            System.out.print("\nConfirm rental (yes/no): ");
+            String confirm = scanner.nextLine().trim().toLowerCase();
+    
+            if (confirm.equals("yes")) {
+                if (car.rent(currentCustomer, (int) days)) {
+                    System.out.println("Car rented successfully!");
+                } else {
+                    System.out.println("Car is no longer available!");
+                }
+                break;
             }
-        } else {
-            System.out.println("Rental cancelled.");
+    
+            if (confirm.equals("no")) {
+                System.out.println("Rental cancelled.");
+                break;
+            }
+    
+            System.out.println("Please type 'yes' or 'no'.");
         }
     }
+    
 }

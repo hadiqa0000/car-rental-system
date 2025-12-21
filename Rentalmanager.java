@@ -7,6 +7,7 @@ public class Rentalmanager {
     private List<Rental> activeRentals = new ArrayList<>();
     private List<Rental> rentalHistory = new ArrayList<>();
     private String rentalsFilePath;
+
     public void RentalManager(String filePath) {
         this.rentalsFilePath = filePath;
         loadRentals();
@@ -65,10 +66,18 @@ public class Rentalmanager {
     }
     }
 
-        private long getDaysBetween(LocalDate start, LocalDate end) {
-            return java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
-        }
+    private long getDaysBetween(LocalDate start, LocalDate end) {
+        return java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
+    }
+
+public Rental createRental(Customer customer, Car car, LocalDate startDate, LocalDate endDate) {
+    String rentalId = "RENT" + System.currentTimeMillis();
+    double totalFee = car.calculateRentalFee((int)getDaysBetween(startDate, endDate));
+    Rental rental = new Rental(rentalId, customer, car, startDate, endDate, totalFee, true);
+        activeRentals.add(rental);
+
         
 
 
 
+    }
