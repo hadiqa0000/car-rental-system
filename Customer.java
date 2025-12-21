@@ -1,35 +1,53 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Customer {
     private String id;
     private String name;
     private String email;
     private String password;
-    
-    public Customer(String id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+
+    private List<Rental> activeRentals = new ArrayList<>();
+    private List<Rental> pastRentals = new ArrayList<>();
+
+    public void addRental(Rental rental) {
+        activeRentals.add(rental);
     }
-    
-    public boolean checkPassword(String input) {
-        return this.password.equals(input);
+
+    public void completeRental(Rental rental) {
+        activeRentals.remove(rental);
+        pastRentals.add(rental);
     }
-    
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    
-   
-    public static boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.contains(".");
+
+    public List<Rental> getActiveRentals() {
+        return activeRentals;
     }
-    
-    public static boolean isValidPassword(String password) {
-        return password != null && password.length() >= 6;
+
+    public List<Rental> getPastRentals() {
+        return pastRentals;
     }
-    
-    @Override
-    public String toString() {
-        return name + " (" + email + ")";
+    public void viewmyrentals(){
+
+        if(activeRentals.isEmpty() && pastRentals.isEmpty()){
+            System.out.println("No rental history found!");
+            return;
+        }
+
+        if(!activeRentals.isEmpty()){
+            System.out.println("=== ACTIVE RENTALS ===");
+            for( Rental r : activeRentals ){
+                System.out.println(r);
+            }
+        }
+
+        if(!pastRentals.isEmpty()){
+            System.out.println("=== PAST RENTALS ===");
+            for( Rental r : pastRentals ){
+                System.out.println(r);
+            }
+        }
+        }
+
     }
-}
+
+
