@@ -4,7 +4,6 @@ import java.time.temporal.ChronoUnit;
 
 public class Rental {
     private String rentalID;
-    private double totalFee;
     private Customer customer;
     private Car car;
     private LocalDate startDate;
@@ -12,17 +11,15 @@ public class Rental {
     private Payment payment;
     private boolean isActive;
 
-    public Rental(String rentalID, Customer customer, Car car, LocalDate start, LocalDate end, double totalFee,
-            boolean isActive) {
-        this.customer = customer;
-        this.totalFee = totalFee;
+    public Rental(String rentalID, Customer customer, Car car,
+                  LocalDate start, LocalDate end) {
         this.rentalID = rentalID;
-        this.isActive = true;
+        this.customer = customer;
         this.car = car;
         this.startDate = start;
         this.endDate = end;
         this.payment = new Payment(calculateRentalFee());
-        car.setAvailable(false);
+        this.isActive = true;
     }
 
     public double calculateRentalFee() {
@@ -30,50 +27,48 @@ public class Rental {
         return car.calculateRentalFee((int) days);
     }
 
-    public void returnCar() {
-        if (!isActive) {
-            System.out.println("Rental already completed.");
-            return;
-        }
+    public void completeRental() {
+        if(!isActive) return;
         isActive = false;
-
-        payment.setPaid(true);
-        System.out.println("Car returned successfully. Total fee: $" + payment.getAmount());
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public void markPaid() {
+       if(isActive){
+        System.out.println("cannot pay for an active rental");
+        return;
+
+       }
+       payment.setPaid(true);
     }
 
-    public Car getCar() {
-        return car;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public Payment getPayment() {
-        return payment;
+    public boolean isPaid() {
+        return payment.isPaid();
     }
 
     public boolean isActive() {
         return isActive;
     }
 
-    public string getrentalID(){
-        return rentalID
+    public String getRentalID() {
+        return rentalID;
     }
 
     @Override
-    public String toString() {
-        String status = isActive ? "Active" : "Completed";
-        return String.format("Rental ID: %s | Car: %s %s | Period: %s to %s | Fee: $%.2f | Status: %s",
-                rentalID, car.getBrand(), car.getModel(), startDate, endDate, payment, status);
-    }
+public String toString() {
+    String status = isActive ? "Active" : "Completed";
+    String paymentStatus = payment.isPaid() ? "Paid" : "Pending";
+
+    return String.format(
+        "Rental ID: %s | Car: %s %s | %s → %s | Fee: $%.2f | %s | %s",
+        rentalID,
+        car.getBrand(),
+        car.getModel(),
+        startDate,
+        endDate,
+        payment.getAmount(),
+        status,
+        paymentStatus
+    );
+}
 
 }

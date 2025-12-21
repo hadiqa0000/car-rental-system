@@ -363,12 +363,10 @@ public class Main {
                         browseCarsForCustomer(); 
                         break;
                     case 3:
-                        // yet to do: Implement view rentals
-                        System.out.println("Feature coming soon!");
+                        currentCustomer.viewMyRentals();
                         break;
                     case 4:
-                        // yet to do: Implement return car
-                        System.out.println("Feature coming soon!");
+                       returnCarMenu();
                         break;
                     case 5:
                         currentCustomer = null;
@@ -559,6 +557,36 @@ public class Main {
     
             System.out.println("Please type 'yes' or 'no'.");
         }
+
+       
+       
+        Rental rental = new Rental(
+    generateRentalID(),
+    currentCustomer,
+    car,
+    startDate,
+    endDate
+);
+
+currentCustomer.addRental(rental);
+car.setAvailable(false);
+
     }
+
+    private static void returnCarMenu() {
+        currentCustomer.viewMyRentals();
+    
+        System.out.print("\nEnter Rental ID to return (or 0 to cancel): ");
+        String input = scanner.nextLine().trim();
+    
+        if (input.equals("0")) {
+            return;
+        }
+    
+        currentCustomer.returnCar(input);
+    }
+    
+
+
     
 }
