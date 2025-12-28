@@ -71,4 +71,28 @@ public String toString() {
     );
 }
 
+public String toCSV() {
+    return String.join(",",
+        rentalID,
+        customer.getId(),
+        String.valueOf(car.id()),
+        startDate.toString(),
+        endDate.toString(),
+        String.valueOf(isActive)
+    );
+}
+
+public static Rental fromCSV(
+        String[] parts,
+        Customer customer,
+        Car car
+) {
+    Rental r = new Rental(
+        parts[0],
+        customer,
+        car,
+        LocalDate.parse(parts[3]),
+        LocalDate.parse(parts[4])
+    );
+
 }
