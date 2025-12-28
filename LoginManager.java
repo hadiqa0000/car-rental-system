@@ -54,6 +54,16 @@ public class LoginManager {
         }
         return null;
     }
+
+    public Customer getCustomerById(String id) {
+        for (Customer c : customers) {
+            if (c.getId().equals(id)) {
+                return c;
+            }
+        }
+        return null;
+    }
+    
     
     public boolean register(String name, String email, String password) {
 
