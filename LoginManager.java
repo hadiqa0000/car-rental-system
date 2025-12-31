@@ -80,7 +80,7 @@ public class LoginManager {
         
 
         customers.put(email, customer);
-        
+
         
         try (PrintWriter writer = new PrintWriter(new FileWriter(customerFilePath, true))) {
             writer.println(id + "," + name + "," + email + "," + password);
@@ -97,6 +97,12 @@ public class LoginManager {
     public Map<String, Customer> getCustomers() {
         return new HashMap<>(customers);
     }
+
+
+    public Customer getCustomerByEmail(String email) {
+        return customers.get(email);
+    }
+    
 
     private static void login() {
         System.out.println("\n=== Login ===");

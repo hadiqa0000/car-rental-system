@@ -37,6 +37,16 @@ public class CarInventory {
         }
     }
 
+    public Car getCarById(int id) {
+        for (Car car : cars) {
+            if (car.id() == id) {
+                return car;
+            }
+        }
+        return null;
+    }
+    
+
     public List<Car> getAvailableCars() {
         List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
@@ -45,13 +55,18 @@ public class CarInventory {
         return availableCars;
     }
 
-    public List<Car> searchCars(Integer year, String model, Double minPrice, Double maxPrice) {
+    public List<Car> searchCars(
+        Integer minYear,
+        String model,
+        String brand,
+        Double maxPrice
+) {
         List<Car> results = new ArrayList<>();
         for (Car car : cars) {
             if (!car.isAvailable()) continue;
-            if (year != null && car.getYear() != year) continue;
+            if (minYear != null && car.getYear() < minYear) continue;
             if (model != null && !car.getModel().equalsIgnoreCase(model)) continue;
-            if (minPrice != null && car.getpricePerDay() < minPrice) continue;
+            if (brand != null && !car.getBrand().equalsIgnoreCase(brand)) continue;
             if (maxPrice != null && car.getpricePerDay() > maxPrice) continue;
             results.add(car);
         }

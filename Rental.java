@@ -4,6 +4,7 @@ import java.time.temporal.ChronoUnit;
 
 public class Rental {
     private String rentalID;
+    
     private Customer customer;
     private Car car;
     private LocalDate startDate;
@@ -85,8 +86,7 @@ public String toCSV() {
 public static Rental fromCSV(
         String[] parts,
         Customer customer,
-        Car car
-) {
+        Car car) {
     Rental r = new Rental(
         parts[0],
         customer,
@@ -95,4 +95,13 @@ public static Rental fromCSV(
         LocalDate.parse(parts[4])
     );
 
+    if (!Boolean.parseBoolean(parts[5])) {
+        r.completeRental();
+    }
+
+    return r;
+}
+public car getCar(){
+    return car;
+}
 }

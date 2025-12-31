@@ -4,80 +4,98 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Rentalmanager {
-    private List<Rental> activeRentals = new ArrayList<>();
-    private List<Rental> rentalHistory = new ArrayList<>();
-    private String rentalsFilePath;
+    private LoginManager loginManager;
+    private CarInventory inventory;
 
-    public void RentalManager(String filePath) {
-        this.rentalsFilePath = filePath;
-        loadRentals();
+    private final List<Rental> rentals = new ArrayList<>();
+    private final String filePath;
+
+    public  Rentalmanager(LoginManager loginmanager, CarInventory inventory, String filePath) {
+        this.loginManager = loginmanager;
+        this.inventory = inventory;
+        this.filePath = filePath;
+
     }
 
-    public void loadRentals() {
-        File file = new File(rentalsFilePath);
-        if(!file.exists()){
-            try{
-
-            
-            file.createNewFile();
-            try (PrintWriter writer = new PrintWriter(new FileWriter(file, true))) {
-                writer.println("rental_id,customer_id,customer_name,car_id,car_brand,car_model,start_date,end_date,total_fee,is_active");
-            }
-            catch (IOException e) {
-                System.err.println("Error creating rentals file: " + e.getMessage());
-            }
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(rentalsFilePath))) {
-            br.readLine();
+    public void load() {
+        File file = new File(filePath);
+        if (!file.exists()) return;
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                String[] parts = line.split(",");
-                if (parts.length < 10) continue;
-                
-                String rentalId = parts[0];
-                String customerId = parts[1];
-                String customerName = parts[2];
-                int carId = Integer.parseInt(parts[3]);
-                String carBrand = parts[4];
-                String carModel = parts[5];
-                LocalDate startDate = LocalDate.parse(parts[6]);
-                LocalDate endDate = LocalDate.parse(parts[7]);
-                double totalFee = Double.parseDouble(parts[8]);
-                boolean isActive = Boolean.parseBoolean(parts[9]);
-                Customer customer = new Customer(customerId, customerName, "", "");
-                Car car = new GasCar(carId, carBrand, carModel, 2020, totalFee/(getDaysBetween(startDate, endDate)), "Gasoline");
-                Rental rental = new Rental(rentalId, customer, car, startDate, endDate, totalFee, isActive);
-                
-                if(isActive){
-                    activeRentals.add(rental);
-                }
-                else{
-                    rentalHistory.add(rental);
-                }
+                String[] p = line.split(",");
+                if (p.length != 6) continue;
+    
+                Customer c = loginManager.getCustomerById(p[1]);
+                Car car = inventory.getCarById(Integer.parseInt(p[2]));
+    
+                if (c == null || car == null) continue;
+    
+                rentals.add(Rental.fromCSV(p, c, car));
             }
         } catch (IOException e) {
-            System.err.println("Error loading rentals: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
     
 
+    public void save() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
+            for (Rental r : rentals) {
+                pw.println(r.toCSV());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void addRental(Rental r) {
+        rentals.add(r);
+        save();
+    }
+    public void completeRental(String rentalId) {
+        for (Rental r : rentals) {
+            if (r.getRentalID().equals(rentalId)) {
+                r.completeRental();
+                save();
+                return;
+            }
+        }
+    }
+    
+    
+
+    public List<Rental> getRentalsForCustomer(String customerId) {
+        List<Rental> list = new ArrayList<>();
+        for (Rental r : rentals) {
+            if (r.getCustomer().getId().equals(customerId)) {
+                list.add(r);
+            }
+        }
+        return list;
     }
 
-    private long getDaysBetween(LocalDate start, LocalDate end) {
-        return java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
-    }
+    public Rental createRental(Customer customer, Car car,LocalDate start, LocalDate end) {
 
-public Rental createRental(Customer customer, Car car, LocalDate startDate, LocalDate endDate) {
-    String rentalId = "RENT" + System.currentTimeMillis();
-    double totalFee = car.calculateRentalFee((int)getDaysBetween(startDate, endDate));
-    Rental rental = new Rental(rentalId, customer, car, startDate, endDate, totalFee, true);
-        activeRentals.add(rental);
+    if (!car.isAvailable()) return null;
 
-        
+    String rentalId = "R" + (rentals.size() + 1);
 
+    Rental rental = new Rental(
+            rentalId,
+            customer,
+            car,
+            start,
+            end
+    );
 
+    car.setAvailable(false);
+    rentals.add(rental);
+    save();
 
-    }
+    return rental;
+}
+
+}

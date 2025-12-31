@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 public class Customer {
 
@@ -35,24 +36,45 @@ public class Customer {
         activeRentals.add(rental);
     }
 
-    public void returnCar(String rentalID) {
-        Iterator<Rental> iterator = activeRentals.iterator();
+    public void returnCar(String rentalID, Scanner scanner) {
+    Iterator<Rental> iterator = activeRentals.iterator();
 
-        while (iterator.hasNext()) {
-            Rental rental = iterator.next();
+    while (iterator.hasNext()) {
+        Rental rental = iterator.next();
 
-            if (rental.getRentalID().equals(rentalID)) {
-                rental.completeRental();
-                iterator.remove();
-                pastRentals.add(rental);
+        if (rental.getRentalID().equals(rentalID)) {
 
-                System.out.println("Car returned successfully.");
-                return;
+            System.out.printf(
+                "Amount due: $%.2f%n",
+                rental.calculateRentalFee()
+            );
+
+            while (true) {
+                System.out.print("Pay now? (yes/no): ");
+                String input = scanner.nextLine().trim().toLowerCase();
+
+                if (input.equals("yes")) {
+                    rental.markPaid();
+                    rental.completeRental();
+                    iterator.remove();
+                    pastRentals.add(rental);
+                    System.out.println("Payment successful. Car returned.");
+                    return;
+                }
+
+                if (input.equals("no")) {
+                    System.out.println("Return cancelled. Payment required.");
+                    return;
+                }
+
+                System.out.println("Type yes or no.");
             }
         }
-
-        System.out.println("No active rental found with that ID.");
     }
+
+    System.out.println("No active rental found with that ID.");
+}
+
 
     public void viewMyRentals() {
         if (activeRentals.isEmpty() && pastRentals.isEmpty()) {
