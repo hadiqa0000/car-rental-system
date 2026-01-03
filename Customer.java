@@ -77,23 +77,26 @@ public class Customer {
 
 
     public void viewMyRentals() {
-        if (activeRentals.isEmpty() && pastRentals.isEmpty()) {
-            System.out.println("You have no rentals.");
-            return;
-        }
 
+        
         if (!activeRentals.isEmpty()) {
             System.out.println("=== ACTIVE RENTALS ===");
             for (Rental r : activeRentals) {
                 System.out.println(r);
             }
         }
-
         if (!pastRentals.isEmpty()) {
             System.out.println("\n=== PAST RENTALS ===");
             for (Rental r : pastRentals) {
                 System.out.println(r);
             }
         }
+        if (activeRentals.isEmpty() && pastRentals.isEmpty()) {
+            System.out.println("You have no rentals.");
+            return;
+        }
+
+
+
     }
 }

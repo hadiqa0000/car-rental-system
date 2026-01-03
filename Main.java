@@ -276,25 +276,37 @@ public class Main {
     }
 
     private static void login() {
-        System.out.println("\n=== Login ===");
-        System.out.print("Email: ");
-
-        String email = scanner.nextLine();
-
-        isValidEmail(email);
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
-
-        currentCustomer = loginManager.login(email, password);
-
-        if (currentCustomer != null) {
-            System.out.println("Login successful! Welcome " + currentCustomer.getName());
-            showCustomerMenu();
-        } else {
-            System.out.println("Invalid email or password!");
+        while (true) {
+            try {
+                System.out.println("\n=== Login ===");
+    
+                System.out.print("Email: ");
+                String email = scanner.nextLine();
+    
+                if (!isValidEmail(email)) {
+                    throw new IllegalArgumentException("Invalid email format.");
+                }
+    
+                System.out.print("Password: ");
+                String password = scanner.nextLine();
+    
+                currentCustomer = loginManager.login(email, password);
+    
+                if (currentCustomer == null) {
+                    throw new IllegalArgumentException("Invalid email or password.");
+                }
+    
+                System.out.println("Login successful! Welcome " + currentCustomer.getName());
+                showCustomerMenu();
+                break; // exit loop only on success
+    
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please try again.\n");
+            }
         }
     }
-
+    
     private static void register() {
         System.out.println("\n=== Registration ===");
 

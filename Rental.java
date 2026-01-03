@@ -4,7 +4,6 @@ import java.time.temporal.ChronoUnit;
 
 public class Rental {
     private String rentalID;
-    
     private Customer customer;
     private Car car;
     private LocalDate startDate;
@@ -22,6 +21,8 @@ public class Rental {
         this.payment = new Payment(calculateRentalFee());
         this.isActive = true;
     }
+
+
 
     public double calculateRentalFee() {
         long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
@@ -54,6 +55,8 @@ public class Rental {
         return rentalID;
     }
 
+
+    //prints a human readable summary, just returns a string
     @Override
 public String toString() {
     String status = isActive ? "Active" : "Completed";
@@ -101,7 +104,7 @@ public static Rental fromCSV(
 
     return r;
 }
-public car getCar(){
+public Car getCar(){
     return car;
 }
 }
