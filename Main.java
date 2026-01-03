@@ -298,7 +298,7 @@ public class Main {
     
                 System.out.println("Login successful! Welcome " + currentCustomer.getName());
                 showCustomerMenu();
-                break; // exit loop only on success
+                break; 
     
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -308,21 +308,25 @@ public class Main {
     }
     
     private static void register() {
-        System.out.println("\n=== Registration ===");
+        while(true){
+            try{
 
-        System.out.print("Full Name: ");
+                System.out.println("\n=== Registration ===");
 
-        String name = scanner.nextLine();
-        if (!checkfullname(name)) {
-            System.out.print("full name is mandatory!");
-            return;
-        }
+                System.out.print("Full Name: ");
+        
+                String name = scanner.nextLine();
+                if(!checkfullname(name)){
+                    throw new IllegalArgumentException("full name is mandatory");
+                }
+            
+        
 
         System.out.print("Email: ");
         String email = scanner.nextLine();
+
         if (!isValidEmail(email)) {
-            System.out.print("cannot register with an invalid email");
-            return;
+            throw new IllegalArgumentException("invalid cridentials");
 
         }
 
@@ -333,22 +337,36 @@ public class Main {
         String confirmPassword = scanner.nextLine();
 
         if (!password.equals(confirmPassword)) {
-            System.out.println("Passwords do not match!");
-            return;
+
+           throw new IllegalArgumentException("invalid cridentials");
         }
 
         if (password.length() < 6) {
-            System.out.println("Password must be at least 6 characters!");
-            return;
+           throw new IllegalArgumentException("invalid length! password must be more than 6 characters");
         }
 
-        if (loginManager.register(name, email, password)) {
+        System.out.print("Confirm Password: ");
+             confirmPassword = scanner.nextLine();
+
+            if (!password.equals(confirmPassword)) {
+                throw new IllegalArgumentException("Passwords do not match.");
+            }
+
+            if (!loginManager.register(name, email, password)) {
+                throw new IllegalArgumentException("Registration failed. Email may already exist.");
+            }
+
             currentCustomer = loginManager.getCustomerByEmail(email);
             System.out.println("Registration successful! Welcome " + currentCustomer.getName());
             showCustomerMenu();
+            break; // exit loop only on success
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Please try again.\n");
         }
-        
     }
+}
 
     private static void showCustomerMenu() {
         while (currentCustomer != null) {
