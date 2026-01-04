@@ -33,6 +33,10 @@ public class Customer {
   
 
     public void addRental(Rental rental) {
+        System.out.println("addRental() CALLED");
+
+        System.out.println("Customer instance: " + System.identityHashCode(this));
+
         activeRentals.add(rental);
     }
 
@@ -95,6 +99,8 @@ public class Customer {
             System.out.println("You have no rentals.");
             return;
         }
+        System.out.println("Customer instance: " + System.identityHashCode(this));
+
 
 
 
